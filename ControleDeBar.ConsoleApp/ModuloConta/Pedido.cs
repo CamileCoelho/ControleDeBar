@@ -9,8 +9,8 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 {
     public class Pedido
     {
-        public Produto produto { get; }
-        public int quantidadeProduto { get; }
+        public Produto produto { get; set; }
+        public int quantidadeProduto { get; set; }
 
         public Pedido()
         {

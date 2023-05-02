@@ -1,6 +1,8 @@
 ﻿using ControleDeBar.ConsoleApp.Compartilhado;
 using ControleDeBar.ConsoleApp.ModuloFuncionario;
 using ControleDeBar.ConsoleApp.ModuloGarcon;
+using ControleDeBar.ConsoleApp.ModuloMesa;
+using ControleDeBar.ConsoleApp.ModuloProduto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +15,24 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
     {
         RepositorioBase<Conta> repositorioBase;
         RepositorioConta repositorioConta;
+        RepositorioBase<Mesa> repositorioMesa;
+        TelaMesa telaMesa;
         RepositorioBase<Garcon> repositorioGarcon;
         TelaGarcon telaGarcon;
+        RepositorioBase<Produto> repositorioProduto;
+        TelaProduto telaProduto;
         Validador validador;
 
-        public TelaRequisicao(RepositorioConta repositorioConta, RepositorioGarcon repositorioGarcon, TelaGarcon telaGarcon, Validador validador)
+        public TelaConta(RepositorioConta repositorioConta, RepositorioMesa repositorioMesa, RepositorioProduto repositorioProduto, TelaProduto telaProduto, TelaMesa telaMesa, RepositorioGarcon repositorioGarcon, TelaGarcon telaGarcon, Validador validador)
         {
-            this.repositorioRequisicao = repositorioRequisicao;
-            repositorioBase = repositorioRequisicao;
-            this.repositorioPaciente = repositorioPaciente;
-            this.repositorioRemedio = repositorioRemedio;
-            this.repositorioFuncionario = repositorioFuncionario;
-            this.telaPaciente = telaPaciente;
-            this.telaRemedio = telaRemedio;
-            this.telaFuncionario = telaFuncionario;
+            this.repositorioConta = repositorioConta;
+            repositorioBase = repositorioConta;
+            this.repositorioMesa = repositorioMesa;
+            this.telaMesa = telaMesa;
+            this.repositorioGarcon = repositorioGarcon;
+            this.telaGarcon = telaGarcon;
+            this.repositorioProduto = repositorioProduto;
+            this.telaProduto = telaProduto;
             this.validador = validador;
         }
 
@@ -75,7 +81,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                 Console.WriteLine();
                 Console.WriteLine("   1  - Para abrir uma conta.                                                                 ");
                 Console.WriteLine();
-                Console.WriteLine("   2  - Para visualizar todas as suas contas.                                                 ");
+                Console.WriteLine("   2  - Para visualizar as suas contas diárias.                                               ");
                 Console.WriteLine();
                 Console.WriteLine("   3  - Para editar uma conta.                                                                ");
                 Console.WriteLine();
@@ -104,39 +110,39 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
         private void Request()
         {
-            if (repositorioRemedio.GetAll().Count == 0)
+            if (repositorioGarcon.GetAll().Count == 0)
             {
-                ExibirMensagem("\n   Nenhum remédio cadastrado. " +
-                    "\n   Você deve cadastrar um remédio para poder realizar uma requisição.", ConsoleColor.DarkRed);
+                ExibirMensagem("\n   Nenhum garçom cadastrado. " +
+                    "\n   Você deve cadastrar um garçom para poder abrir uma conta.", ConsoleColor.DarkRed);
                 return;
             }
-            if (repositorioPaciente.GetAll().Count == 0)
+            if (repositorioMesa.GetAll().Count == 0)
             {
-                ExibirMensagem("\n   Nenhum paciente cadastrado. " +
-                    "\n   Você deve cadastrar um paciente para poder realizar uma requisição.", ConsoleColor.DarkRed);
+                ExibirMensagem("\n   Nenhuma mesa cadastrada. " +
+                    "\n   Você deve cadastrar uma mesa para poder abrir uma conta.", ConsoleColor.DarkRed);
                 return;
             }
-            if (repositorioFuncionario.GetAll().Count == 0)
+            if (repositorioProduto.GetAll().Count == 0)
             {
-                ExibirMensagem("\n   Nenhum funcionário cadastrado. " +
-                    "\n   Você deve cadastrar um funcionário para poder realizar uma requisição.", ConsoleColor.DarkRed);
+                ExibirMensagem("\n   Nenhum produto cadastrado. " +
+                    "\n   Você deve cadastrar um produto para poder abrir uma conta.", ConsoleColor.DarkRed);
                 return;
             }
 
-            Imput(out Paciente paciente, out InformacoesReposicao informacoesReposicao, out int quantidadeRequisitada, out string senhaImputada);
+            Imput(out Mesa mesa, out Pedido pedido, out DateTime data, out string senhaImputada);
 
-            Requisicao toAdd = new(paciente, informacoesReposicao, quantidadeRequisitada);
+            Conta toAdd = new(mesa, pedido, data);
 
-            string valido = validador.ValidarRequisicao(toAdd, senhaImputada);
+            string valido = validador.ValidarConta(toAdd, senhaImputada);
 
             if (valido == "REGISTRO_REALIZADO")
             {
-                repositorioRequisicao.Insert(toAdd);
-                ExibirMensagem("\n   Requisição realizada com sucesso!", ConsoleColor.DarkGreen);
+                repositorioConta.Insert(toAdd);
+                ExibirMensagem("\n   Conta aberta com sucesso!", ConsoleColor.DarkGreen);
             }
             else
             {
-                ExibirMensagem("\n   Requisição Não Realizada: " + valido, ConsoleColor.DarkRed);
+                ExibirMensagem("\n   Conta Não Aberta: " + valido, ConsoleColor.DarkRed);
             }
         }
 
@@ -215,22 +221,23 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.ReadLine();
         }
 
-        private void Imput(out Paciente paciente, out InformacoesReposicao informacoesReposicao, out int quantidadeRequisitada, out string senhaImputada)
+        private void Imput(out Mesa mesa, out Pedido pedido, out DateTime data, out string senhaImputada)
         {
             Console.Clear();
 
-            paciente = (Paciente)repositorioPaciente.GetById(telaPaciente.ObterId(repositorioPaciente));
+            mesa = (Mesa)repositorioMesa.GetById(telaMesa.ObterId(repositorioMesa));
 
-            informacoesReposicao.remedio = (Remedio)repositorioRemedio.GetById(telaRemedio.ObterId(repositorioRemedio));
-            informacoesReposicao.data = DateTime.Now.Date;
+            data = DateTime.Now.Date;
 
-            Console.Write("\n   Digite a quatidade de unidades que o paciente deseja desse remédio: ");
-            while (!int.TryParse(Console.ReadLine(), out quantidadeRequisitada))
+            Produto produto = (Produto)repositorioProduto.GetById(telaProduto.ObterId(repositorioProduto));
+
+            Console.Write("\n   Digite a quatidade de unidades que o cliente deseja desse produto: ");
+            while (!int.TryParse(Console.ReadLine(), out pedido.quantidadeProduto))
             {
                 ExibirMensagem("\n   Entrada inválida! Digite um número inteiro. ", ConsoleColor.DarkRed);
-                Console.Write("\n   Digite a quatidade de unidades que o paciente deseja desse remédio: ");
+                Console.Write("\n   Digite a quatidade de unidades que o unidades que o cliente deseja desse produto: ");
             }
-            informacoesReposicao.funcionario = (Funcionario)repositorioFuncionario.GetById(telaFuncionario.ObterId(repositorioFuncionario));
+            mesa.garcon = (Garcon)repositorioGarcon.GetById(telaGarcon.ObterId(repositorioGarcon));
             Console.Write("\n   Digite a senha: ");
             senhaImputada = Console.ReadLine();
         }
@@ -255,38 +262,39 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.Clear();
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("                                               Lista de Contas!                                                       ");
+            Console.WriteLine("                                          Lista de Contas em Aberto!                                                  ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ");
+            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}|{5,-25}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
 
             foreach (Conta print in repositorioConta.GetAll())
             {
-                if (print != null)
+                if (print != null && print.mesa.status == "DISPONIVEL")
                 {
-                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.mesa.status);
+                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}|{5,-25}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.mesa.status, print.data.ToString("dd/MM/yyyy");
                 }
             }
         }
+
         public void MostarListaContasEncerradas(RepositorioConta repositorioConta)
         {
             Console.Clear();
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("                                               Lista de Contas!                                                       ");
+            Console.WriteLine("                                         Lista de Contas Encerradas!                                                  ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ");
+            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}|{5,-25}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
 
             foreach (Conta print in repositorioConta.GetAll())
             {
-                if (print != null)
+                if (print != null && print.mesa.status != "DISPONIVEL")
                 {
-                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.mesa.status);
+                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25|{5,-25}}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.mesa.status, print.data.ToString("dd/MM/yyyy"));
                 }
             }
         }
@@ -296,18 +304,18 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.Clear();
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("                                               Lista de Contas!                                                       ");
+            Console.WriteLine("                                           Lista de Contas Diárias!                                                   ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ");
+            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}|{5,-25}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
 
             foreach (Conta print in repositorioConta.GetAll())
             {
-                if (print != null)
+                if (print != null && print.data == DateTime.Today)
                 {
-                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.mesa.status);
+                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}|{4,-25}|{5,-25}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.data.ToString("dd/MM/yyyy"));
                 }
             }
         }

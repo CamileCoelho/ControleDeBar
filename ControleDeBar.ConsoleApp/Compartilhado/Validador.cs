@@ -167,6 +167,22 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             return "REGISTRO_REALIZADO";
         }
 
+        public string ValidarConta(Conta toAdd, string senhaImputada)
+        {
+            Validador valida = new();
+            string mensagem = "";
+
+            if (toAdd.mesa.garcon.senha == null)
+                mensagem += " FUNCIONARIO_INVALIDO ";
+            else if (valida.ValidarString(senhaImputada) || toAdd.mesa.garcon.senha != senhaImputada)
+                mensagem += " SENHA_ERRADA ";
+
+            if (mensagem != "")
+                return mensagem;
+
+            return "REGISTRO_REALIZADO";
+        }
+
         public string PermitirExclusaoDaMesa(Mesa toDelete)
         {
             if (toDelete == null)

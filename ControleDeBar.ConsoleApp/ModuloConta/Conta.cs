@@ -13,19 +13,22 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
     public class Conta : EntidadeBase
     {
         public Mesa mesa { get; set; }
-        public decimal valorFinal { get; set; }
+        Pedido pedido { get; set; }
         public List<Pedido> listaPedidos { get; set; }
+        public decimal valorFinal { get; set; }
+        public DateTime data { get; set; }
 
         public Conta()
         {
             
         }
 
-        public Conta(Mesa mesa,decimal valorFinal, List<Pedido> listaPedidos)
+        public Conta(Mesa mesa, Pedido pedido, DateTime data)
         {
             this.mesa = mesa;
-            this.valorFinal = valorFinal;
+            //this.pedido.produto.preco = valorFinal;
             this.listaPedidos = listaPedidos;
+            this.data = data;
         }
 
         public override void UpdateInfo(EntidadeBase imput)
