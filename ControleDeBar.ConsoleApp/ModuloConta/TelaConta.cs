@@ -17,8 +17,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
         TelaGarcon telaGarcon;
         Validador validador;
 
-        public TelaRequisicao(RepositorioRequisicao repositorioRequisicao, RepositorioPaciente repositorioPaciente, RepositorioRemedio repositorioRemedio,
-            RepositorioFuncionario repositorioFuncionario, TelaPaciente telaPaciente, TelaRemedio telaRemedio, TelaFuncionario telaFuncionario, Validador validador)
+        public TelaRequisicao(RepositorioConta repositorioConta, RepositorioGarcon repositorioGarcon, TelaGarcon telaGarcon, Validador validador)
         {
             this.repositorioRequisicao = repositorioRequisicao;
             repositorioBase = repositorioRequisicao;

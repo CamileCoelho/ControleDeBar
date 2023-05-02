@@ -167,23 +167,6 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             return "REGISTRO_REALIZADO";
         }
 
-        public string ValidarRemedio(Remedio imput)
-        {
-            Validador valida = new();
-            string mensagem = "";
-
-            if (valida.ValidarString(imput.nome))
-                mensagem += " NOME_INVALIDO ";
-
-            if (valida.ValidarString(imput.descricao))
-                mensagem += " DESCRICAO_INVALIDA ";
-
-            if (mensagem != "")
-                return mensagem;
-
-            return "REGISTRO_REALIZADO";
-        }
-
         public string PermitirExclusaoDaMesa(Mesa toDelete)
         {
             if (toDelete == null)
@@ -204,35 +187,17 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
                 return "SUCESSO!";
         }
 
-        public string PermitirExclusaoDoFornecedor(Fornecedor toDelete)
-        {
-            if (toDelete == null)
-                return " Fornecedor não encontrado!";
-            if (repositorioAquisicao.GetAll().Any(x => x.informacoesReposicao.remedio.fornecedor.id == toDelete.id))
-                return " Este fornecedor possuí processo em andamento. ";
-            else
-                return "SUCESSO!";
-        }
-
         public string PermitirExclusaoDoProduto(Produto toDelete)
         {
             if (toDelete == null)
-                return " Remédio não encontrado!";
-            if (repositorioPedido.GetAll().Any(x => x.produto.id == toDelete.id))//|| rep.GetAll().Any(x => x.informacoesReposicao.remedio.id == toDelete.id))
+                return " Produto não encontrado!";
+            if (repositorioConta.GetAll().Any(x => x.produto.id == toDelete.id))//|| rep.GetAll().Any(x => x.informacoesReposicao.remedio.id == toDelete.id))
                 return " Este produto possuí processo em andamento. ";
             else
                 return "SUCESSO!";
         }
 
-        public string PermitirExclusaoRequisicao(Requisicao toDelete)
-        {
-            if (toDelete == null)
-                return " Requisição não encontrada!";            
-            else
-                return "SUCESSO!";
-        }
-
-        public string PermitirExclusaoAquisicao(Aquisicao toDelete, string senhaImputada)
+        public string PermitirExclusaoConta(Conta toDelete, string senhaImputada)
         {
             Validador valida = new();
             string mensagem = "";
