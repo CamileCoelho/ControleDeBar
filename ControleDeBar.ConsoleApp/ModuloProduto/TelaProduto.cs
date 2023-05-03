@@ -196,7 +196,7 @@ namespace ControleDeBar.ConsoleApp.ModuloProduto
             Console.WriteLine("                                     Lista de Produtos                                       ");
             Console.WriteLine("_____________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-25}|{2,-35}|{3,-25}", "ID ", "  NOME ", "  DESCRIÇÃO ", "  PREÇO ");
+            Console.WriteLine("{0,-5}|{1,-25}|{2,-35}|{3,-25}", "ID ", "  NOME ", "  DESCRIÇÃO ", "  PREÇO  ");
             Console.WriteLine("_____________________________________________________________________________________________");
             Console.WriteLine();
 
@@ -204,7 +204,7 @@ namespace ControleDeBar.ConsoleApp.ModuloProduto
             {
                 if (print != null)
                 {
-                    Console.WriteLine("{0,-5}|{1,-25}|{2,-35}|{3,-25}", print.id, print.nome, print.descricao, print.preco);
+                    Console.WriteLine("{0,-5}|{1,-25}|{2,-35}|R$ {3,-25}", print.id, print.nome, print.descricao, print.preco);
                 }
             }
         }

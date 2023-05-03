@@ -208,12 +208,22 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                 return;
             }
 
-            Conta toRemove = (Conta)repositorioBase.GetById(ObterId(repositorioConta));
+            Conta toEdit = (Conta)repositorioBase.GetById(ObterId(repositorioConta));
 
-            int id = ObterIdPedido(toRemove);
-            Pedido pedido = toRemove.listaPedidos.Find(pedido => pedido.id == id);
+            int id = ObterIdPedido(toEdit);
+            Pedido pedido = toEdit.listaPedidos.Find(pedido => pedido.id == id);
 
-            repositorioConta.RemovePedido(toRemove, pedido);
+            string valido = validador.PermitirRemocaoDoPedido(pedido, toEdit);
+
+            if (pedido != null && valido == "SUCESSO!")
+            {
+                repositorioConta.RemovePedido(toEdit, pedido);
+                ExibirMensagem("\n   Pedido removido com sucesso! ", ConsoleColor.DarkGreen);
+            }
+            else
+            {
+                ExibirMensagem("\n   Pedido não excluido:" + valido, ConsoleColor.DarkRed);
+            }
         }
 
         public void MostarListaPedidos(Conta toRemove)

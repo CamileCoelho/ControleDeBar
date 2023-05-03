@@ -29,7 +29,7 @@ namespace ControleDeBar.ConsoleApp
 
             bool continuar = true;
 
-            //PopularCamposParaTeste(repositorioFuncionario, repositorioGarcon, repositorioMesa, repositorioProduto, repositorioConta);
+            PopularCamposParaTeste(repositorioFuncionario, repositorioGarcon, repositorioMesa, repositorioProduto, repositorioConta);
 
             do
             {
@@ -69,7 +69,7 @@ namespace ControleDeBar.ConsoleApp
                 Console.WriteLine("                          Bem-vindo ao Controle do Bar!                           ");
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
-                Console.WriteLine($"   Faturamento do dia: R${financeiro.faturamento}                                ");
+                Console.WriteLine($"   Faturamento do dia: R$ {financeiro.faturamento},00                                ");
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
                 Console.WriteLine("   Digite:                                                                        ");
@@ -151,9 +151,6 @@ namespace ControleDeBar.ConsoleApp
             repositorioMesa.Insert(mesa07);
             Mesa mesa08 = new Mesa(rechg);
             repositorioMesa.Insert(mesa08);
-
-
-
         }
     }
 }

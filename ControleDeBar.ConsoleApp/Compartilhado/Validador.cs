@@ -197,7 +197,7 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
         {
             if (toDelete == null)
                 return " Funcionário não encontrado!";
-            if (repositorioGarcon.GetAll().Any(x => x.id == toDelete.id) || repositorioMesa.GetAll().Any(x =>x.garcon.id == toDelete.id))
+            if (repositorioGarcon.GetAll().Any(x => x.id == toDelete.id) || repositorioMesa.GetAll().Any(x =>x.garcon.id == toDelete.id) || repositorioConta.GetAll().Any(x => x.id == toDelete.id))
                 return " Este funcionário possuí processo em andamento. ";
             else
                 return "SUCESSO!";
@@ -207,7 +207,7 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
         {
             if (toDelete == null)
                 return " Garçom não encontrado!";
-            if (repositorioMesa.GetAll().Any(x => x.garcon.id == toDelete.id))
+            if (repositorioMesa.GetAll().Any(x => x.garcon.id == toDelete.id) || repositorioConta.GetAll().Any(x => x.id == toDelete.id))
                 return " Este Garçom possuí processo em andamento. ";
             else
                 return "SUCESSO!";
@@ -217,10 +217,20 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
         {
             if (toDelete == null)
                 return " Produto não encontrado!";
-            if (repositorioConta.GetAll().Any(x => x.id == toDelete.id))//|| rep.GetAll().Any(x => x.informacoesReposicao.remedio.id == toDelete.id))
+            if (repositorioConta.GetAll().Any(x => x.id == toDelete.id))
                 return " Este produto possuí processo em andamento. ";
             else
                 return "SUCESSO!";
+        }
+
+        public string PermitirRemocaoDoPedido(Pedido toRemove, Conta conta)
+        {
+            if (toRemove == null)
+                return " Pedido não encontrado!";
+            else if (conta.listaPedidos.Any(x => x.id == toRemove.id))
+                return "SUCESSO!";
+            else
+                return " Pedido não encontrado!";
         }
 
         public string PermitirExclusaoConta(Conta toDelete, string senhaImputada)
