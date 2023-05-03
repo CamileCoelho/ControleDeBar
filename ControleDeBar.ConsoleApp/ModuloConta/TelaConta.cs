@@ -394,7 +394,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             {
                 if (print != null && print.status == "EM ABERTO")
                 {
-                    Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}|{4,-20}|{5,-20}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.status, print.data.ToString("dd/MM/yyyy"));
+                    Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|R$ {3,-20}|{4,-20}|{5,-20}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.status, print.data.ToString("dd/MM/yyyy"));
                 }
             }
         }
@@ -415,7 +415,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             {
                 if (print != null && print.status != "EM ABERTO")
                 {
-                    Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}|{4,-20}|{5,-20}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.status, print.data.ToString("dd/MM/yyyy"));
+                    Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|R$ {3,-20}|{4,-20}|{5,-20}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.status, print.data.ToString("dd/MM/yyyy"));
                 }
             }
         }
@@ -436,7 +436,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             {
                 if (print != null && print.data.Date == DateTime.Today.Date)
                 {
-                    Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}|{4,-20}|{5,-20}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.status, print.data.ToString("dd/MM/yyyy"));
+                    Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|R$ {3,-20}|{4,-20}|{5,-20}", print.id, print.mesa.id, print.mesa.garcon.informacoesPessoais.nome, print.valorFinal, print.status, print.data.ToString("dd/MM/yyyy"));
                 }
             }
         }
