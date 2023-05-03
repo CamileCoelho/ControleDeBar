@@ -172,13 +172,51 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             Validador valida = new();
             string mensagem = "";
 
-            if (toAdd == null)
+            if (toAdd == null )
                 mensagem += " MESA_INVALIDA ";
 
             if (toAdd != null && toAdd.mesa.garcon.senha == null)
                 mensagem += " FUNCIONARIO_INVALIDO ";
             else if (toAdd != null && valida.ValidarString(senhaImputada) || toAdd != null && toAdd.mesa.garcon.senha != senhaImputada)
                 mensagem += " SENHA_ERRADA ";
+
+            if (mensagem != "")
+                return mensagem;
+
+            return "REGISTRO_REALIZADO";
+        }
+        public string ValidarContaOpen(Conta toAdd, Mesa mesa, string senhaImputada)
+        {
+            Validador valida = new();
+            string mensagem = "";
+
+            if (toAdd.mesa == null)
+                mensagem += " MESA_INVALIDA ";
+            else if (mesa.status == "INDISPONIVEL")
+                mensagem += " MESA_INDISPONIVEL ";
+
+            if (toAdd != null && toAdd.mesa.garcon.senha == null)
+                mensagem += " FUNCIONARIO_INVALIDO ";
+            else if (toAdd != null && valida.ValidarString(senhaImputada) || toAdd != null && toAdd.mesa.garcon.senha != senhaImputada)
+                mensagem += " SENHA_ERRADA ";
+
+            if (mensagem != "")
+                return mensagem;
+
+            return "REGISTRO_REALIZADO";
+        }
+
+        public string ValidarContaExistente(Conta conta)
+        {
+            Validador valida = new();
+            string mensagem = "";
+
+            if (conta == null)
+                mensagem += " CONTA_INVALIDA ";
+            else if (repositorioConta.GetAll().Any(x => x.id == conta.id))
+                return "REGISTRO_REALIZADO";
+            else
+                return " CONTA_NAO_ENCONTRADA ";
 
             if (mensagem != "")
                 return mensagem;

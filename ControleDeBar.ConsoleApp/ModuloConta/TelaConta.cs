@@ -144,10 +144,10 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
             Conta toAdd = null;
 
+            string valido = validador.ValidarContaOpen(toAdd, mesa, senhaImputada);
+
             if (mesa != null)
                 toAdd = new(mesa);
-
-            string valido = validador.ValidarConta(toAdd, senhaImputada);
 
             if (valido == "REGISTRO_REALIZADO")
             {
@@ -168,38 +168,73 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                     "\n   Você deve abrir uma conta para poder adicionar pedidos a uma conta.", ConsoleColor.DarkRed);
                 return;
             }
-            Conta toUpdate = (Conta)repositorioBase.GetById(ObterId(repositorioConta));
-
-            List<Produto> produtos = new();
-
-            do
+            if (repositorioConta.GetAll().Count == 0)
             {
-                Produto produto = (Produto)repositorioProduto.GetById(telaProduto.ObterId(repositorioProduto));                
-                string nome = produto.nome;
-                decimal valor = produto.preco;
-                int quantidade;
-                Console.Write("\n   Digite a quatidade de unidades que o cliente deseja desse produto: ");
-                while (!int.TryParse(Console.ReadLine(), out quantidade))
+                ExibirMensagem("\n   Nenhuma conta encontrada. " +
+                    "\n   Você deve abrir uma conta para poder visualizar suas contas.", ConsoleColor.DarkRed);
+                return;
+            }
+            if (repositorioConta.GetAll().Any(x => x.status == "EM ABERTO"))
+            {
+
+                Conta toUpdate = (Conta)repositorioBase.GetById(ObterIdContaAberta(repositorioConta));
+
+                List<Produto> produtos = new();
+
+                string valido = validador.ValidarContaExistente(toUpdate);
+
+                if (valido == "REGISTRO_REALIZADO")
                 {
-                    ExibirMensagem("\n   Entrada inválida! Digite um número inteiro. ", ConsoleColor.DarkRed);
-                    Console.Write("\n   Digite a quatidade de unidades que o unidades que o cliente deseja desse produto: ");
+                    do
+                    {
+                        Produto produto = (Produto)repositorioProduto.GetById(telaProduto.ObterId(repositorioProduto));
+                        string nome;
+
+                        if (produto != null)
+                            nome = produto.nome;
+                        else
+                        {
+                            ExibirMensagem("\n   Peido não adicionado:  PRODUTO_INEXISTENTE ", ConsoleColor.DarkRed);
+                            return;
+                        }
+
+                        decimal valor = produto.preco;
+                        int quantidade;
+                        Console.Write("\n   Digite a quatidade de unidades que o cliente deseja desse produto: ");
+                        while (!int.TryParse(Console.ReadLine(), out quantidade))
+                        {
+                            ExibirMensagem("\n   Entrada inválida! Digite um número inteiro. ", ConsoleColor.DarkRed);
+                            Console.Write("\n   Digite a quatidade de unidades que o unidades que o cliente deseja desse produto: ");
+                        }
+                        Produto produtoPedido = new(nome, valor, quantidade);
+                        produtos.Add(produtoPedido);
+
+                        Console.WriteLine("\n   Você deseja mais algum produto? se sim, digite \"S\" para continuar," +
+                            "\n   caso não, digite qualquer tecla para finalizar seu pedido atual. ");
+                        Console.Write("   ");
+                        string saida = Console.ReadLine().ToUpper();
+
+                        if (saida != "S")
+                            break;
+
+                    } while (true);
+
+                    Pedido pedido = new(produtos);
+
+                    repositorioConta.AddPedido(toUpdate, pedido);
+
+                    ExibirMensagem("\n   Peido adicionado com sucesso!", ConsoleColor.DarkGreen);
                 }
-                Produto produtoPedido = new(nome, valor, quantidade);
-                produtos.Add(produtoPedido);
-
-                Console.WriteLine("\n   Você deseja mais algum produto? se sim, digite \"S\" para continuar," +
-                    "\n   caso não, digite qualquer tecla para finalizar seu pedido atual. ");
-                Console.Write("   ");
-                string saida = Console.ReadLine().ToUpper();
-
-                if (saida != "S")
-                    break;
-
-            } while (true);
-
-            Pedido pedido = new(produtos);
-
-            repositorioConta.AddPedido(toUpdate, pedido);
+                else
+                {
+                    ExibirMensagem("\n   Peido não adicionado: " + valido, ConsoleColor.DarkRed);
+                }
+            }
+            else
+            {
+                ExibirMensagem("\n   Nenhuma conta em aberto. ", ConsoleColor.DarkRed);
+                return;
+            }
         }
 
         private void RemovePedidos()
@@ -229,7 +264,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             }
         }
 
-        public void MostarListaPedidos(Conta toRemove)
+        public void MostarListaPedidos(Conta toEdit)
         {
             Console.Clear();
             Console.WriteLine("________________________________________________________________________________________________________");
@@ -241,11 +276,11 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.WriteLine("________________________________________________________________________________________________________");
             Console.WriteLine();
 
-            foreach (Pedido print in toRemove.listaPedidos)
+            foreach (Pedido print in toEdit.listaPedidos)
             {
                 if (print != null)
                 {
-                    Console.Write("{0,-5}   |", print.id);
+                    Console.Write("{0,-5} |", print.id);
 
                     foreach (Produto produto in print.produtos)
                     {
@@ -256,10 +291,10 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             }
         }
 
-        public int ObterIdPedido(Conta toRemove)
+        public int ObterIdPedido(Conta toEdit)
         {
             Console.Clear();
-            MostarListaPedidos(toRemove);
+            MostarListaPedidos(toEdit);
 
             Console.Write("\n   Digite o id do pedido: ");
             int id;
@@ -377,6 +412,21 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
         {
             Console.Clear();
             MostarListaContas(repositorioConta);
+
+            Console.Write("\n   Digite o id da conta: ");
+            int id;
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                ExibirMensagem("\n   Entrada inválida! Digite um número inteiro. ", ConsoleColor.DarkRed);
+                Console.Write("\n   Digite o id da conta: ");
+            }
+            return id;
+        }
+
+        public int ObterIdContaAberta(RepositorioBase<Conta> repositorioBase)
+        {
+            Console.Clear();
+            MostarListaContasEmAberto(repositorioConta);
 
             Console.Write("\n   Digite o id da conta: ");
             int id;

@@ -56,6 +56,9 @@ namespace ControleDeBar.ConsoleApp
                     case "5":
                         telaConta.VisualizarTela();
                         break;
+                    case "6":
+                        financeiro.ZerarFaturamento();
+                        break;
                 }
 
             } while (continuar);
@@ -69,23 +72,30 @@ namespace ControleDeBar.ConsoleApp
                 Console.WriteLine("                          Bem-vindo ao Controle do Bar!                           ");
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
-                Console.WriteLine($"   Faturamento do dia: R$ {financeiro.faturamento},00                                ");
+                Console.WriteLine($"   Faturamento do dia: R$ {financeiro.faturamento},00                            ");
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
                 Console.WriteLine("   Digite:                                                                        ");
                 Console.WriteLine();
                 Console.WriteLine("   1  - Para gestão de funcionarios.                                              ");
+                Console.WriteLine();
                 Console.WriteLine("   2  - Para gestão de produtos.                                                  ");
+                Console.WriteLine();
                 Console.WriteLine("   3  - Para gestão de garçons.                                                   ");
+                Console.WriteLine();
                 Console.WriteLine("   4  - Para gestão de mesas.                                                     ");
+                Console.WriteLine();
                 Console.WriteLine("   5  - Para gestão de contas.                                                    ");
+                Console.WriteLine();
+                Console.WriteLine("   6  - Para zerar seu histórico de faturamento do dia.                           ");
+                Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("   S  - Para sair.                                                                ");
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
                 Console.Write("   Opção escolhida: ");
                 string opcao = Console.ReadLine().ToUpper();
-                bool opcaoValida = opcao != "1" && opcao != "2" && opcao != "3" && opcao != "4" && opcao != "5" && opcao != "S";
+                bool opcaoValida = opcao != "1" && opcao != "2" && opcao != "3" && opcao != "4" && opcao != "5" && opcao != "6" && opcao != "S";
                 while (opcaoValida)
                 {
                     if (opcaoValida)
