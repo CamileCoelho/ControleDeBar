@@ -142,12 +142,9 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
             Imput(out Mesa mesa, out string senhaImputada);
 
-            Conta toAdd = null;
-
-            string valido = validador.ValidarContaOpen(toAdd, mesa, senhaImputada);
-
-            if (mesa != null)
-                toAdd = new(mesa);
+            string valido = validador.ValidarContaOpen(mesa, senhaImputada);
+           
+            Conta toAdd = new(mesa);
 
             if (valido == "REGISTRO_REALIZADO")
             {

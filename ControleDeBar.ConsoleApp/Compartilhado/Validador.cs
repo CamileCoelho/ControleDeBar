@@ -185,19 +185,19 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
 
             return "REGISTRO_REALIZADO";
         }
-        public string ValidarContaOpen(Conta toAdd, Mesa mesa, string senhaImputada)
+        public string ValidarContaOpen(Mesa mesa, string senhaImputada)
         {
             Validador valida = new();
             string mensagem = "";
 
-            if (toAdd.mesa == null)
+            if (mesa == null)
                 mensagem += " MESA_INVALIDA ";
             else if (mesa.status == "INDISPONIVEL")
                 mensagem += " MESA_INDISPONIVEL ";
 
-            if (toAdd != null && toAdd.mesa.garcon.senha == null)
+            if (mesa.garcon.senha == null)
                 mensagem += " FUNCIONARIO_INVALIDO ";
-            else if (toAdd != null && valida.ValidarString(senhaImputada) || toAdd != null && toAdd.mesa.garcon.senha != senhaImputada)
+            else if (valida.ValidarString(senhaImputada) || mesa.garcon.senha != senhaImputada)
                 mensagem += " SENHA_ERRADA ";
 
             if (mensagem != "")
