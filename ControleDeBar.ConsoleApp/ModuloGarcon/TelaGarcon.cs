@@ -1,10 +1,5 @@
 ﻿using ControleDeBar.ConsoleApp.Compartilhado;
 using ControleDeBar.ConsoleApp.ModuloFuncionario;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ControleDeBar.ConsoleApp.ModuloGarcon
 {
@@ -15,9 +10,11 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
         RepositorioBase<Funcionario> repositorioFuncionario;
         TelaFuncionario telaFuncionario;
 
-        public TelaGarcon(RepositorioGarcon repositorioGarcon, RepositorioFuncionario repositorioFuncionario, 
+        public TelaGarcon(RepositorioGarcon repositorioGarcon, RepositorioFuncionario repositorioFuncionario,
             TelaFuncionario telaFuncionario, Validador validador)
         {
+            nomeEntidade = "garçon";
+            sufixo = "s";
             this.repositorioGarcon = repositorioGarcon;
             repositorioBase = repositorioGarcon;
             this.repositorioFuncionario = repositorioFuncionario;
@@ -31,11 +28,11 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
 
             do
             {
-                string opcao = MostrarMenuGarcom();
+                string opcao = MostrarMenu();
 
                 switch (opcao)
                 {
-                    case "4":
+                    case "5":
                         continuar = false;
                         Console.ResetColor();
                         break;
@@ -48,42 +45,11 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
                     case "3":
                         Editar();
                         continue;
+                    case "4":
+                        Excluir();
+                        continue;
                 }
             } while (continuar);
-            string MostrarMenuGarcom()
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Clear();
-                Console.WriteLine("__________________________________________________________________________________");
-                Console.WriteLine();
-                Console.WriteLine("                                Gestão de Garçons!                                ");
-                Console.WriteLine("__________________________________________________________________________________");
-                Console.WriteLine();
-                Console.WriteLine("   Digite:                                                                        ");
-                Console.WriteLine();
-                Console.WriteLine("   1  - Para cadastrar um garçom.                                                 ");
-                Console.WriteLine();
-                Console.WriteLine("   2  - Para visualizar seus garçons.                                             ");
-                Console.WriteLine(); 
-                Console.WriteLine("   3  - Para editar um garçom.                                                    ");
-                Console.WriteLine();
-                Console.WriteLine(); 
-                Console.WriteLine("   4  - Para voltar ao menu principal.                                            ");
-                Console.WriteLine("__________________________________________________________________________________");
-                Console.WriteLine();
-                Console.Write("   Opção escolhida: ");
-                string opcao = Console.ReadLine().ToUpper();
-                bool opcaoInvalida = opcao != "1" && opcao != "2" && opcao != "3" && opcao != "4";
-                while (opcaoInvalida)
-                {
-                    if (opcaoInvalida)
-                    {
-                        ExibirMensagem("\n   Opção inválida, tente novamente. ", ConsoleColor.DarkRed);
-                        break;
-                    }
-                }
-                return opcao;
-            }
         }
 
         private void Cadastrar()
@@ -160,6 +126,30 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
             }
         }
 
+        private void Excluir()
+        {
+            if (repositorioGarcon.GetAll().Count == 0)
+            {
+                ExibirMensagem("\n   Nenhum garçom cadastrado. " +
+                    "\n   Você deve cadastrar um garçom para poder excluir seu cadastro.", ConsoleColor.DarkRed);
+                return;
+            }
+
+            Garcon toDelete = (Garcon)repositorioBase.GetById(ObterId(repositorioGarcon));
+
+            string valido = validador.PermitirExclusaoDoGarcon(toDelete);
+
+            if (toDelete != null && valido == "SUCESSO!")
+            {
+                repositorioGarcon.Delete(toDelete);
+                ExibirMensagem("\n   Garçom excluido com sucesso! ", ConsoleColor.DarkGreen);
+            }
+            else
+            {
+                ExibirMensagem("\n   Garçom não excluido:" + valido, ConsoleColor.DarkRed);
+            }
+        }
+
         private void Imput(out Funcionario funcionario, out string senhaImputada)
         {
             funcionario = (Funcionario)repositorioFuncionario.GetById(telaFuncionario.ObterId(repositorioFuncionario));
@@ -186,7 +176,7 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
         {
             Console.Clear();
             Console.WriteLine("_____________________________________________________________________________________________");
-            Console.WriteLine(); 
+            Console.WriteLine();
             Console.WriteLine("                                     Lista de Garçons!                                       ");
             Console.WriteLine("_____________________________________________________________________________________________");
             Console.WriteLine();
@@ -197,10 +187,9 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
             foreach (Garcon print in repositorioGarcon.GetAll())
             {
                 if (print != null)
-                
+
                     Console.WriteLine("{0,-5}|{1,-25}|{2,-25}|{3,-25}", print.id, print.informacoesPessoais.nome, print.informacoesPessoais.telefone, print.informacoesPessoais.cpf);
-                }
             }
-        
+        }        
     }
 }

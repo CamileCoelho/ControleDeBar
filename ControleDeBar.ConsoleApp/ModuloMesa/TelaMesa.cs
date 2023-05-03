@@ -164,7 +164,7 @@ namespace ControleDeBar.ConsoleApp.ModuloMesa
             Console.WriteLine("                  Lista de Mesas                           ");
             Console.WriteLine("___________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-25}|{2,-25}", "ID ", "  GARÇOM ", "  STATUS ");
+            Console.WriteLine("{0,-10}|{1,-25}|{2,-25}", "NÚMERO ", "  GARÇOM ", "  STATUS ");
             Console.WriteLine("___________________________________________________________");
             Console.WriteLine();
 
@@ -172,7 +172,7 @@ namespace ControleDeBar.ConsoleApp.ModuloMesa
             {
                 if (print != null)
                 {
-                    Console.WriteLine("{0,-5}|{1,-25}|{2,-25}", print.id, print.garcon, print.status);
+                    Console.WriteLine("{0,-10}|{1,-25}|{2,-25}", print.id, print.garcon.informacoesPessoais.nome, print.status);
                 }
             }
         }
@@ -182,12 +182,12 @@ namespace ControleDeBar.ConsoleApp.ModuloMesa
             Console.Clear();
             MostarListaMesas(repositorioMesa);
 
-            Console.Write("\n   Digite o id da mesa: ");
+            Console.Write("\n   Digite o número da mesa: ");
             int id;
             while (!int.TryParse(Console.ReadLine(), out id))
             {
                 ExibirMensagem("\n   Entrada inválida! Digite um número inteiro. ", ConsoleColor.DarkRed);
-                Console.Write("\n   Digite o id da mesa: ");
+                Console.Write("\n   Digite o número da mesa: ");
             }
             return id;
         }

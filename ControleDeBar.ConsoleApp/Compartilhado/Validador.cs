@@ -197,8 +197,18 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
         {
             if (toDelete == null)
                 return " Funcionário não encontrado!";
-            if (repositorioGarcon.GetAll().Any(x => x.id == toDelete.id) || repositorioMesa.GetAll().Any(x => .x == toDelete.id))
+            if (repositorioGarcon.GetAll().Any(x => x.id == toDelete.id) || repositorioMesa.GetAll().Any(x =>x.garcon.id == toDelete.id))
                 return " Este funcionário possuí processo em andamento. ";
+            else
+                return "SUCESSO!";
+        }
+
+        public string PermitirExclusaoDoGarcon(Funcionario toDelete)
+        {
+            if (toDelete == null)
+                return " Garçom não encontrado!";
+            if (repositorioMesa.GetAll().Any(x => x.garcon.id == toDelete.id))
+                return " Este Garçom possuí processo em andamento. ";
             else
                 return "SUCESSO!";
         }
@@ -207,7 +217,7 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
         {
             if (toDelete == null)
                 return " Produto não encontrado!";
-            if (repositorioConta.GetAll().Any(x => x.produto.id == toDelete.id))//|| rep.GetAll().Any(x => x.informacoesReposicao.remedio.id == toDelete.id))
+            if (repositorioConta.GetAll().Any(x => x.id == toDelete.id))//|| rep.GetAll().Any(x => x.informacoesReposicao.remedio.id == toDelete.id))
                 return " Este produto possuí processo em andamento. ";
             else
                 return "SUCESSO!";
@@ -218,13 +228,13 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             Validador valida = new();
             string mensagem = "";
 
-            if (toDelete.informacoesReposicao.funcionario == null)
-                mensagem += " FUNCIONARIO_INVALIDO ";
-            else if (valida.ValidarString(senhaImputada) || toDelete.informacoesReposicao.funcionario.senha != senhaImputada)
+            if (toDelete.mesa.garcon == null)
+                mensagem += " GARCOM_INVALIDO ";
+            else if (valida.ValidarString(senhaImputada) || toDelete.mesa.garcon.senha != senhaImputada)
                 mensagem += " SENHA_ERRADA ";
 
             if (toDelete == null)
-                return " AQUISICAO_INEXISTENTE ";
+                return " CONTA_INEXISTENTE ";
 
             if (mensagem != "")
                 return mensagem;

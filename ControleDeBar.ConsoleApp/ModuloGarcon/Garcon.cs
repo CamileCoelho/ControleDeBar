@@ -10,8 +10,6 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
 {
     public class Garcon : Funcionario
     {
-        public string gorgeta { get; set; }
-
         public Garcon()
         {
 
@@ -19,12 +17,9 @@ namespace ControleDeBar.ConsoleApp.ModuloGarcon
 
         public Garcon(Funcionario funcionario)
         {
-            
-        }
-
-        public void ReceberGorgeta(decimal gorgeta)
-        {
-            this.gorgeta += gorgeta; // 5% do valor total da compra
+            this.id = funcionario.id;
+            this.senha = funcionario.senha;
+            this.informacoesPessoais = funcionario.informacoesPessoais;
         }
     }
 }

@@ -11,11 +11,13 @@ namespace ControleDeBar.ConsoleApp
     {
         static void Main(string[] args)
         {
+            Financeiro financeiro = new();
+
             RepositorioFuncionario repositorioFuncionario = new();
             RepositorioGarcon repositorioGarcon = new();
             RepositorioMesa repositorioMesa = new();
             RepositorioProduto repositorioProduto = new();
-            RepositorioConta repositorioConta = new();
+            RepositorioConta repositorioConta = new(financeiro);
 
             Validador validador = new Validador(repositorioFuncionario, repositorioGarcon, repositorioMesa, repositorioProduto, repositorioConta);
 
@@ -23,16 +25,11 @@ namespace ControleDeBar.ConsoleApp
             TelaGarcon telaGarcon = new(repositorioGarcon, repositorioFuncionario, telaFuncionario, validador);
             TelaMesa telaMesa = new(repositorioMesa, repositorioGarcon, telaGarcon, validador);
             TelaProduto telaProduto = new(repositorioProduto, repositorioFuncionario, telaFuncionario, validador);
-            TelaConta telaConta = new(repositorioConta, repositorioGarcon, telaGarcon, validador);
+            TelaConta telaConta = new(repositorioConta, repositorioMesa, repositorioProduto, telaProduto, telaMesa, repositorioGarcon, telaGarcon, validador);
 
             bool continuar = true;
 
-            PopularCamposParaTeste(
-            repositorioFuncionario,
-            repositorioGarcon,
-            repositorioMesa,
-            repositorioProduto,
-            repositorioConta);
+            PopularCamposParaTeste(repositorioFuncionario, repositorioGarcon, repositorioMesa, repositorioProduto, repositorioConta);
 
             do
             {
@@ -70,6 +67,9 @@ namespace ControleDeBar.ConsoleApp
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
                 Console.WriteLine("                          Bem-vindo ao Controle do Bar!                           ");
+                Console.WriteLine("__________________________________________________________________________________");
+                Console.WriteLine();
+                Console.WriteLine($"   Faturamento do dia: R${financeiro.faturamento}                                ");
                 Console.WriteLine("__________________________________________________________________________________");
                 Console.WriteLine();
                 Console.WriteLine("   Digite:                                                                        ");
@@ -115,6 +115,7 @@ namespace ControleDeBar.ConsoleApp
             Produto cerveja = new Produto("BRHAMA", "cerveja", 10);
             repositorioProduto.Insert(cerveja);
             Mesa mesa01 = new Mesa(camileGarcon);
+            repositorioMesa.Insert(mesa01);
         }
     }
 }

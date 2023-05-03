@@ -12,7 +12,8 @@ namespace ControleDeBar.ConsoleApp.ModuloProduto
         public string nome {  get; set; }
         public string descricao { get; set; }
         public decimal preco { get; set; }
-
+        public int quantidade { get; set; }
+        
         public Produto()
         {
             
@@ -23,6 +24,13 @@ namespace ControleDeBar.ConsoleApp.ModuloProduto
             this.nome = nome;
             this.descricao = descricao;
             this.preco = preco;
+        }
+
+        public Produto(string nome, decimal preco, int quantidade)
+        {
+            this.nome = nome;
+            this.preco = preco;
+            this.quantidade = quantidade;
         }
 
         public override void UpdateInfo(EntidadeBase imput)
