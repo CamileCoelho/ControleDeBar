@@ -29,7 +29,7 @@ namespace ControleDeBar.ConsoleApp
 
             bool continuar = true;
 
-            PopularCamposParaTeste(repositorioFuncionario, repositorioGarcon, repositorioMesa, repositorioProduto, repositorioConta);
+            //PopularCamposParaTeste(repositorioFuncionario, repositorioGarcon, repositorioMesa, repositorioProduto, repositorioConta);
 
             do
             {

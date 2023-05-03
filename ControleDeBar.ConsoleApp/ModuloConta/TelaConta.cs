@@ -159,13 +159,19 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
         private void AddPedidos()
         {
+            if (repositorioConta.GetAll().Count == 0)
+            {
+                ExibirMensagem("\n   Nenhuma conta aberta. " +
+                    "\n   Você deve abrir uma conta para poder adicionar pedidos a uma conta.", ConsoleColor.DarkRed);
+                return;
+            }
             Conta toUpdate = (Conta)repositorioBase.GetById(ObterId(repositorioConta));
 
             List<Produto> produtos = new();
 
             do
             {
-                Produto produto = (Produto)repositorioProduto.GetById(telaProduto.ObterId(repositorioProduto));
+                Produto produto = (Produto)repositorioProduto.GetById(telaProduto.ObterId(repositorioProduto));                
                 string nome = produto.nome;
                 decimal valor = produto.preco;
                 int quantidade;
@@ -195,6 +201,13 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
         private void RemovePedidos()
         {
+            if (repositorioConta.GetAll().Count == 0)
+            {
+                ExibirMensagem("\n   Nenhuma conta aberta. " +
+                    "\n   Você deve abrir uma conta para poder remover pedidos de uma conta.", ConsoleColor.DarkRed);
+                return;
+            }
+
             Conta toRemove = (Conta)repositorioBase.GetById(ObterId(repositorioConta));
 
             int id = ObterIdPedido(toRemove);
@@ -219,7 +232,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             {
                 if (print != null)
                 {
-                    Console.Write("{0,-5}", print.id);
+                    Console.Write("{0,-5}   |", print.id);
 
                     foreach (Produto produto in print.produtos)
                     {
@@ -297,8 +310,16 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                     "\n   Você deve abrir uma conta para poder visualizar suas contas.", ConsoleColor.DarkRed);
                 return;
             }
-            MostarListaContasEmAberto(repositorioConta);
-            Console.ReadLine();
+            if (repositorioConta.GetAll().Any(x => x.status == "EM ABERTO"))
+            {
+                MostarListaContasEmAberto(repositorioConta);
+                Console.ReadLine();
+            }
+            else
+            {
+                ExibirMensagem("\n   Nenhuma conta em aberto. ", ConsoleColor.DarkRed);
+                return;
+            }
         }
 
         private void VisualizarEncerradas()
@@ -309,8 +330,16 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                     "\n   Você deve abrir uma conta para poder visualizar suas contas.", ConsoleColor.DarkRed);
                 return;
             }
-            MostarListaContasEncerradas(repositorioConta);
-            Console.ReadLine();
+            if (repositorioConta.GetAll().Any(x => x.status == "ENCERRADO"))
+            {
+                MostarListaContasEncerradas(repositorioConta);
+                Console.ReadLine();
+            }
+            else
+            {
+                ExibirMensagem("\n   Nenhuma conta encerrada. ", ConsoleColor.DarkRed);
+                return;
+            }
         }
 
         private void Imput(out Mesa mesa, out string senhaImputada)

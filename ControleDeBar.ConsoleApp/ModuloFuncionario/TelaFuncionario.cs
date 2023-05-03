@@ -48,7 +48,7 @@ namespace ControleDeBar.ConsoleApp.ModuloFuncionario
 
         private void Cadastrar()
         {
-            Imput(out InformacoesPessoais informacoesPessoais, out string cpf, out string senha);
+            Imput(out InformacoesPessoais informacoesPessoais, out string senha);
 
             Funcionario toAdd = new(informacoesPessoais, senha);
 
@@ -94,7 +94,7 @@ namespace ControleDeBar.ConsoleApp.ModuloFuncionario
             }
             else
             {
-                Imput(out InformacoesPessoais informacoesPessoais, out string cpf, out string senha);
+                Imput(out InformacoesPessoais informacoesPessoais, out string senha);
 
                 Funcionario imput = new(informacoesPessoais, senha);
 
@@ -136,7 +136,7 @@ namespace ControleDeBar.ConsoleApp.ModuloFuncionario
             }
         }
 
-        public void Imput(out InformacoesPessoais informacoesPessoais, out string cpf, out string senha)
+        public void Imput(out InformacoesPessoais informacoesPessoais, out string senha)
         {
             informacoesPessoais = new InformacoesPessoais();
             Console.Clear();
@@ -147,7 +147,7 @@ namespace ControleDeBar.ConsoleApp.ModuloFuncionario
             Console.Write("\n   Digite seu endereco: ");
             informacoesPessoais.endereco = Console.ReadLine();
             Console.Write("\n   Digite seu CPF (XXX.XXX.XXX-XX ou XXXXXXXXXXX): ");
-            cpf = Console.ReadLine();
+            informacoesPessoais.cpf = Console.ReadLine();
             Console.Write("\n   Digite sua senha XXXX : ");
             senha = Console.ReadLine();
         }

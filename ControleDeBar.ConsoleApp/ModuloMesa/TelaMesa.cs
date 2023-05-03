@@ -59,6 +59,13 @@ namespace ControleDeBar.ConsoleApp.ModuloMesa
 
         private void Cadastrar()
         {
+            if (repositorioGarcon.GetAll().Count == 0)
+            {
+                ExibirMensagem("\n   Nenhum garçom cadastrado. " +
+                    "\n   Você deve cadastrar um garçom para poder cadastrar uma mesa.", ConsoleColor.DarkRed);
+                return;
+            }
+
             Imput(out Garcon garcon, out string senhaImputada);
 
             Mesa toAdd = new (garcon);

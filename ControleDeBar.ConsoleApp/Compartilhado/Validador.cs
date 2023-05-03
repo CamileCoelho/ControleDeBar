@@ -77,13 +77,13 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             if (valida.ValidarString(informacoesPessoais.nome))
                 mensagem += " NOME_INVALIDO ";
 
-            if (valida.ValidaTelefone(informacoesPessoais.telefone))
+            if (informacoesPessoais.telefone == null || valida.ValidaTelefone(informacoesPessoais.telefone))
                 mensagem += " TELEFONE_INVALIDO ";
 
             if (valida.ValidarString(informacoesPessoais.endereco))
                 mensagem += " ENDERECO_INVALIDO ";
 
-            if (valida.ValidaCPF(informacoesPessoais.cpf))
+            if (informacoesPessoais.cpf == null || valida.ValidaCPF(informacoesPessoais.cpf))
                 mensagem += " CPF_INVALIDO ";
 
             if (mensagem != "")
@@ -126,7 +126,7 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             if (validarInfoPessoalCB != "REGISTRO_REALIZADO")
                 mensagem += validarInfoPessoalCB;
 
-            if (valida.ValidarSenha(imput.senha))
+            if (valida.ValidarString(imput.senha) || valida.ValidarSenha(imput.senha) == false)
                 mensagem += " SENHA_INVALIDA ";
 
             if (mensagem != "")
