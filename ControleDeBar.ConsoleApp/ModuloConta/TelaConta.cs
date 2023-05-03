@@ -142,7 +142,10 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
             Imput(out Mesa mesa, out string senhaImputada);
 
-            Conta toAdd = new(mesa);
+            Conta toAdd = null;
+
+            if (mesa != null)
+                toAdd = new(mesa);
 
             string valido = validador.ValidarConta(toAdd, senhaImputada);
 
@@ -355,12 +358,19 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
         private void Imput(out Mesa mesa, out string senhaImputada)
         {
             Console.Clear();
+            Mesa imput = (Mesa)repositorioMesa.GetById(telaMesa.ObterId(repositorioMesa));
 
-            mesa = (Mesa)repositorioMesa.GetById(telaMesa.ObterId(repositorioMesa));
-
-            mesa.garcon = (Garcon)repositorioGarcon.GetById(telaGarcon.ObterId(repositorioGarcon));
-            Console.Write("\n   Digite a senha: ");
-            senhaImputada = Console.ReadLine();
+            if (imput != null)
+            {
+                Console.Write("\n   Digite sua senha: ");
+                senhaImputada = Console.ReadLine();
+                mesa = imput;
+            }
+            else
+            {
+                senhaImputada = null;
+                mesa = null;
+            }
         }
 
         public override int ObterId(RepositorioBase<Conta> repositorioBase)

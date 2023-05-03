@@ -172,9 +172,12 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             Validador valida = new();
             string mensagem = "";
 
-            if (toAdd.mesa.garcon.senha == null)
+            if (toAdd == null)
+                mensagem += " MESA_INVALIDA ";
+
+            if (toAdd != null && toAdd.mesa.garcon.senha == null)
                 mensagem += " FUNCIONARIO_INVALIDO ";
-            else if (valida.ValidarString(senhaImputada) || toAdd.mesa.garcon.senha != senhaImputada)
+            else if (toAdd != null && valida.ValidarString(senhaImputada) || toAdd != null && toAdd.mesa.garcon.senha != senhaImputada)
                 mensagem += " SENHA_ERRADA ";
 
             if (mensagem != "")
