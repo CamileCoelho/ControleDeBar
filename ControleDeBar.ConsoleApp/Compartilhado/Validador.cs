@@ -173,7 +173,7 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             string mensagem = "";
 
             if (toAdd == null )
-                mensagem += " MESA_INVALIDA ";
+                mensagem += " CONTA_INVALIDA ";
 
             if (toAdd != null && toAdd.mesa.garcon.senha == null)
                 mensagem += " FUNCIONARIO_INVALIDO ";
@@ -185,6 +185,7 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
 
             return "REGISTRO_REALIZADO";
         }
+
         public string ValidarContaOpen(Mesa mesa, string senhaImputada)
         {
             Validador valida = new();
@@ -195,7 +196,9 @@ namespace ControleDeBar.ConsoleApp.Compartilhado
             else if (mesa.status == "INDISPONIVEL")
                 mensagem += " MESA_INDISPONIVEL ";
 
-            if (mesa.garcon.senha == null)
+            if (mesa == null)
+                mensagem += " MESA_INVALIDA ";
+            else if (mesa.garcon.senha == null)
                 mensagem += " FUNCIONARIO_INVALIDO ";
             else if (valida.ValidarString(senhaImputada) || mesa.garcon.senha != senhaImputada)
                 mensagem += " SENHA_ERRADA ";

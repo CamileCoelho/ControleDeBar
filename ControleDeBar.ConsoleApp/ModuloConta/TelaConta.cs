@@ -143,8 +143,15 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Imput(out Mesa mesa, out string senhaImputada);
 
             string valido = validador.ValidarContaOpen(mesa, senhaImputada);
-           
-            Conta toAdd = new(mesa);
+
+            Conta toAdd = null;
+            if (mesa == null)
+            {
+                ExibirMensagem("\n   Conta Não Aberta: MESA_INEXISTENTE " , ConsoleColor.DarkRed);
+                return;
+            }
+            else
+                toAdd = new(mesa);
 
             if (valido == "REGISTRO_REALIZADO")
             {
@@ -165,15 +172,8 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                     "\n   Você deve abrir uma conta para poder adicionar pedidos a uma conta.", ConsoleColor.DarkRed);
                 return;
             }
-            if (repositorioConta.GetAll().Count == 0)
-            {
-                ExibirMensagem("\n   Nenhuma conta encontrada. " +
-                    "\n   Você deve abrir uma conta para poder visualizar suas contas.", ConsoleColor.DarkRed);
-                return;
-            }
             if (repositorioConta.GetAll().Any(x => x.status == "EM ABERTO"))
             {
-
                 Conta toUpdate = (Conta)repositorioBase.GetById(ObterIdContaAberta(repositorioConta));
 
                 List<Produto> produtos = new();
@@ -191,7 +191,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                             nome = produto.nome;
                         else
                         {
-                            ExibirMensagem("\n   Peido não adicionado:  PRODUTO_INEXISTENTE ", ConsoleColor.DarkRed);
+                            ExibirMensagem("\n   Pedido não adicionado:  PRODUTO_INEXISTENTE ", ConsoleColor.DarkRed);
                             return;
                         }
 
@@ -220,11 +220,11 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
 
                     repositorioConta.AddPedido(toUpdate, pedido);
 
-                    ExibirMensagem("\n   Peido adicionado com sucesso!", ConsoleColor.DarkGreen);
+                    ExibirMensagem("\n   Pedido adicionado com sucesso!", ConsoleColor.DarkGreen);
                 }
                 else
                 {
-                    ExibirMensagem("\n   Peido não adicionado: " + valido, ConsoleColor.DarkRed);
+                    ExibirMensagem("\n   Pedido não adicionado: " + valido, ConsoleColor.DarkRed);
                 }
             }
             else
@@ -242,24 +242,35 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
                     "\n   Você deve abrir uma conta para poder remover pedidos de uma conta.", ConsoleColor.DarkRed);
                 return;
             }
-
-            Conta toEdit = (Conta)repositorioBase.GetById(ObterId(repositorioConta));
-
-            int id = ObterIdPedido(toEdit);
-            Pedido pedido = toEdit.listaPedidos.Find(pedido => pedido.id == id);
-
-            string valido = validador.PermitirRemocaoDoPedido(pedido, toEdit);
-
-            if (pedido != null && valido == "SUCESSO!")
+            if (repositorioConta.GetAll().Any(x => x.status == "EM ABERTO"))
             {
-                repositorioConta.RemovePedido(toEdit, pedido);
-                ExibirMensagem("\n   Pedido removido com sucesso! ", ConsoleColor.DarkGreen);
+                Conta toEdit = (Conta)repositorioBase.GetById(ObterIdContaAberta(repositorioConta));
+
+                int id = ObterIdPedido(toEdit);
+                Pedido pedido = toEdit.listaPedidos.Find(pedido => pedido.id == id);
+                if (pedido == null)
+                {
+                    ExibirMensagem("\n   Pedido não encontrado. ", ConsoleColor.DarkRed);
+                    return;                    
+                }
+                string valido = validador.PermitirRemocaoDoPedido(pedido, toEdit);
+
+                if (pedido != null && valido == "SUCESSO!")
+                {
+                    repositorioConta.RemovePedido(toEdit, pedido);
+                    ExibirMensagem("\n   Pedido removido com sucesso! ", ConsoleColor.DarkGreen);
+                }
+                else
+                {
+                    ExibirMensagem("\n   Pedido não excluido:" + valido, ConsoleColor.DarkRed);
+                }
             }
             else
             {
-                ExibirMensagem("\n   Pedido não excluido:" + valido, ConsoleColor.DarkRed);
+                ExibirMensagem("\n   Nenhuma conta em aberto. ", ConsoleColor.DarkRed);
+                return;
             }
-        }
+}
 
         public void MostarListaPedidos(Conta toEdit)
         {
@@ -277,7 +288,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             {
                 if (print != null)
                 {
-                    Console.Write("{0,-5} |", print.id);
+                    Console.Write("{0,-5}|", print.id);
 
                     foreach (Produto produto in print.produtos)
                     {
@@ -443,7 +454,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.WriteLine("                                          Lista de Contas em Aberto!                                                  ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}|{4,-20}|{5,-20}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
+            Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}   |{4,-20}|{5,-20}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
 
@@ -464,7 +475,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.WriteLine("                                         Lista de Contas Encerradas!                                                  ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}|{4,-20}|{5,-20}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
+            Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}   |{4,-20}|{5,-20}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
 
@@ -485,7 +496,7 @@ namespace ControleDeBar.ConsoleApp.ModuloConta
             Console.WriteLine("                                           Lista de Contas Diárias!                                                   ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
-            Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}|{4,-20}|{5,-20}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
+            Console.WriteLine("{0,-5}|{1,-20}|{2,-20}|{3,-20}   |{4,-20}|{5,-20}", "ID ", "  MESA ", "  GARÇOM ", "  VALOR TOTAL ", "  STATUS ", "  DATA ");
             Console.WriteLine("______________________________________________________________________________________________________________________");
             Console.WriteLine();
 
