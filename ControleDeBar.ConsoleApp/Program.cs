@@ -144,6 +144,8 @@ namespace ControleDeBar.ConsoleApp
             repositorioProduto.Insert(batata);
             Produto polenta = new Produto("POLENTA", "porção 500g", 40);
             repositorioProduto.Insert(polenta);
+            Produto aipim = new Produto("AIPIM", "porção 500g", 45);
+            repositorioProduto.Insert(aipim);
 
             Mesa mesa01 = new Mesa(camileGarcon);
             repositorioMesa.Insert(mesa01);
@@ -154,7 +156,7 @@ namespace ControleDeBar.ConsoleApp
             Mesa mesa04 = new Mesa(tiagog);
             repositorioMesa.Insert(mesa04);
             Mesa mesa05 = new Mesa(tiagog);
-            repositorioMesa.Insert(mesa02);
+            repositorioMesa.Insert(mesa05);
             Mesa mesa06 = new Mesa(tiagog);
             repositorioMesa.Insert(mesa06);
             Mesa mesa07 = new Mesa(rechg);
